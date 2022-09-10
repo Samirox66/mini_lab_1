@@ -37,6 +37,10 @@ class Entries:
         self.parent_window.add_button('plot', 'Plot', 'plot', hot_key='<Return>')
         self.entries_list.append(new_entry)
 
+    def delete_entry(self):
+        if (len(self.entries_list) > 0):
+            self.entries_list.pop().pack_forget()
+
 
 # class for plotting (класс для построения графиков)
 class Plotter:
@@ -153,6 +157,11 @@ class Commands:
         self.__forget_navigation()
         self.parent_window.entries.add_entry()
 
+    def delete_func(self, *args, **kwargs):
+        self.__forget_canvas()
+        self.__forget_navigation()
+        self.parent_window.entries.delete_entry()
+
     def save_as(self):
         self._state.save_state()
         return self
@@ -247,11 +256,13 @@ if __name__ == "__main__":
     # command's registration (регистрация команд)
     commands_main.add_command('plot', commands_main.plot)
     commands_main.add_command('add_func', commands_main.add_func)
+    commands_main.add_command('delete_func', commands_main.delete_func)
     commands_main.add_command('save_as', commands_main.save_as)
     # init app (создаем экземпляр приложения)
     app = App(buttons_main, plotter_main, commands_main, entries_main)
     # init add func button (добавляем кнопку добавления новой функции)
     app.add_button('add_func', 'Добавить функцию', 'add_func', hot_key='<Control-a>')
+    app.add_button('delete_func', 'Удалить функцию', 'delete_func', hot_key='<Control-z>')
     # init first entry (создаем первое поле ввода)
     entries_main.add_entry()
     app.create_menu()
