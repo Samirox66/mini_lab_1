@@ -38,8 +38,9 @@ class Entries:
         self.entries_list.append(new_entry)
 
     def delete_entry(self):
-        if (len(self.entries_list) > 0):
-            self.entries_list.pop().pack_forget()
+        entry = self.parent_window.focus_get()
+        if (type(entry) == Entry):
+            self.entries_list.pop(self.entries_list.index(entry)).destroy()
 
 
 # class for plotting (класс для построения графиков)
