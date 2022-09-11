@@ -6,7 +6,7 @@ import numpy as np
 
 from functools import partial
 from tkinter import *
-from tkinter.filedialog import asksaveasfile
+from tkinter.filedialog import asksaveasfile, askopenfile
 
 from matplotlib import pyplot as plt
 
@@ -26,8 +26,9 @@ class Entries:
         self.parent_window = parent_window
 
     # adding of new entry (добавление нового текстового поля)
-    def add_entry(self):
+    def add_entry(self, entryText=""):
         new_entry = Entry(self.parent_window)
+        new_entry.insert(0, entryText)
         new_entry.icursor(0)
         new_entry.focus()
         new_entry.pack()
@@ -176,6 +177,16 @@ class Commands:
         self._state.save_state()
         return self
 
+    def load(self):
+        f = askopenfile()
+        if f != None:
+            dict = json.load(f)
+            for entry in self.parent_window.entries.entries_list:
+                entry.destroy()
+            self.parent_window.entries.entries_list = []
+            for entryText in dict['list_of_function']:
+                self.parent_window.entries.add_entry(entryText)
+            self.parent_window.commands.plot()
 
 # class for buttons storage (класс для хранения кнопок)
 class Buttons:
@@ -254,6 +265,7 @@ class App(Tk):
 
         file_menu = Menu(menu)
         file_menu.add_command(label="Save as...", command=self.commands.get_command_by_name('save_as'))
+        file_menu.add_command(label="Load", command=self.commands.get_command_by_name('load'))
         menu.add_cascade(label="File", menu=file_menu)
 
 
@@ -272,6 +284,7 @@ if __name__ == "__main__":
     commands_main.add_command('add_func', commands_main.add_func)
     commands_main.add_command('delete_func', commands_main.delete_func)
     commands_main.add_command('save_as', commands_main.save_as)
+    commands_main.add_command('load', commands_main.load)
     # init app (создаем экземпляр приложения)
     app = App(buttons_main, plotter_main, commands_main, entries_main)
     # init add func button (добавляем кнопку добавления новой функции)
