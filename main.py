@@ -40,7 +40,16 @@ class Entries:
     def delete_entry(self):
         entry = self.parent_window.focus_get()
         if (type(entry) == Entry):
-            self.entries_list.pop(self.entries_list.index(entry)).destroy()
+            if entry.get() != "":
+                mw = ModalWindow(self.parent_window, title='Строка с функцией', labeltext='Если вы уверены, что хотите удалить строку'
+                                                            ', нажмите Continue, иначе - Cancel')
+                callback = partial(mw.continue_deleting, entry=entry, entries_list=self.entries_list)
+                continue_button = Button(master=mw.top, text='Continue', command=callback)
+                cancel_button = Button(master=mw.top, text="Cancel", command=mw.cancel)
+                mw.add_button(continue_button)
+                mw.add_button(cancel_button)
+            else:
+                self.entries_list.pop(self.entries_list.index(entry)).destroy()
 
 
 # class for plotting (класс для построения графиков)
@@ -207,6 +216,10 @@ class ModalWindow:
 
     def cancel(self):
         self.top.destroy()
+
+    def continue_deleting(self, entry, entries_list):
+        self.top.destroy()
+        entries_list.pop(entries_list.index(entry)).destroy()
 
 
 # app class (класс приложения)
