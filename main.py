@@ -51,10 +51,10 @@ class Entries:
                 mw.add_button(cancel_button)
             else:
                 self.entries_list.pop(self.entries_list.index(entry)).destroy()
-                plot_button = self.parent_window.get_button_by_name('plot')
-                if plot_button:
-                    plot_button.pack_forget()
-                self.parent_window.add_button('plot', 'Plot', 'plot', hot_key='<Return>')
+            plot_button = self.parent_window.get_button_by_name('plot')
+            if plot_button:
+                plot_button.pack_forget()
+            self.parent_window.add_button('plot', 'Plot', 'plot', hot_key='<Return>')
 
 
 # class for plotting (класс для построения графиков)
